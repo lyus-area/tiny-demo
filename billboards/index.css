@@ -15,6 +15,7 @@ body {
   display: flex;
   gap: 2px;
 }
+
 ::-webkit-scrollbar {
   width: 3px;
 }
@@ -22,6 +23,7 @@ body {
 ::-webkit-scrollbar-track {
   background-color: #f1f1f1;
 }
+
 ::-webkit-scrollbar-thumb {
   background-color: #c0c0c0;
 }
@@ -52,11 +54,12 @@ body {
   opacity: 0.5;
 }
 
-.new-insert {
+.new-added {
   animation: insert 0.5s linear;
 }
 .will-remove {
   animation: remove 0.5s linear;
+  animation-fill-mode: forwards;
 }
 
 @keyframes insert {
@@ -74,5 +77,6 @@ body {
   }
   to {
     max-height: 0vh;
+    opacity: 0;
   }
 }

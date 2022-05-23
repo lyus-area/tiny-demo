@@ -14,14 +14,13 @@ document.addEventListener("dragstart", (e) => {
 });
 // drag end
 document.addEventListener("dragend", (e) => {
-  if (e.target.classList.contains("draggable")) {
-    e.target.classList.remove("dragging");
-  }
+  cleanClass("dragging");
+  cleanClass("new-added");
 });
 
 function cleanClass(className) {
-  const elems = document.querySelectorAll(`.${className}`);
-  for (let elem of elems) {
+  const elements = document.querySelectorAll(`.${className}`);
+  for (let elem of elements) {
     elem.classList.remove(className);
   }
 }
@@ -38,7 +37,10 @@ function handleDragEnd() {
 droppables.forEach((droppable) => {
   droppable.addEventListener("dragover", (e) => {
     e.preventDefault();
+    // 被移动到column时，位置在dragging前面最近的元素
     const frontSib = getClosestFrontSibling(droppable, e.clientY);
+
+    // dragging 在DOM树中前面的DOM节点
     const preSibling = dragging.previousElementSibling;
     if (frontSib) {
       if (
@@ -48,11 +50,21 @@ droppables.forEach((droppable) => {
       ) {
         return;
       }
-      cloned.classList.add("new-insert");
+
+      cloned.classList.add("new-added");
       frontSib.insertAdjacentElement("afterend", cloned);
       handleDragEnd();
     } else {
-      if (droppable.firstChild === cloned) return;
+      if (
+        droppable.firstChild === cloned ||
+        droppable.firstChild === dragging
+      ) {
+        return;
+      }
+      if (dragging.parentNode === droppable && !preSibling) {
+        return;
+      }
+      cloned.classList.add("new-added");
       droppable.prepend(cloned);
       handleDragEnd();
     }
